@@ -1,0 +1,25 @@
+name: Main workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_requrest:
+    branches:
+      - main
+
+jobs:
+  main:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Configure project
+        run:
+          - mkdir build
+          - cmake -S . -B build
+      - name: Build project
+        run:
+          - cmake --build build
+      - name: Test project
+        run:
+          - ctest --test-dir build
+
