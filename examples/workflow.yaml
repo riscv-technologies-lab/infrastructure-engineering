@@ -1,0 +1,20 @@
+name: Dummy workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+    
+jobs:
+  main:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: config
+      run:
+        cmake -S llvm -B release/build -G Ninja
+        cmake --build release/build
+        cmake --install release/build
+
