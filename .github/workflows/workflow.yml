@@ -15,9 +15,6 @@ env:
 jobs:
   main:
     runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v4
-
       - name: Install dependencies
         run: sudo apt install -y libgtest-dev
 
