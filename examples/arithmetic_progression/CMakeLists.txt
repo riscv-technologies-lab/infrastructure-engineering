@@ -4,8 +4,13 @@ project(ArithmeticProgression)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+
 add_library(arithmetic_progression src/arithmetic_progression.cpp)
 target_include_directories(arithmetic_progression PUBLIC include)
+
+add_executable(entrypoint main.cpp)
+target_include_directories(entrypoint PUBLIC include)
+target_link_libraries(entrypoint PRIVATE arithmetic_progression)
 
 enable_testing()
 find_package(GTest REQUIRED)
