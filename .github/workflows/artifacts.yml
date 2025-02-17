@@ -1,6 +1,7 @@
+---
 name: Main workflow
 
-on:
+on: # yamllint disable-line
   push:
     branches:
       - main
@@ -37,5 +38,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: binary
-          path: $WORKDIR/build/entrypoint
-
+          path: ${{ env.WORKDIR }}/build/entrypoint

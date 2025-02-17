@@ -1,6 +1,7 @@
+---
 name: Main workflow
 
-on:
+on: # yamllint disable-line
   push:
     branches:
       - main
@@ -33,4 +34,3 @@ jobs:
       - name: Test project
         working-directory: ${{ env.WORKDIR }}
         run: ctest --test-dir build
-
