@@ -1,0 +1,18 @@
+workflow:
+  rules:
+    - if: $CI_COMMIT_TITLE ~= /-draft$/
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+main:
+  tags:
+    - saas-linux-small-amd64
+  script:
+    - sudo apt install -y libgtest-dev
+    - cd examples/arithmetic_progression
+    - mkdir build
+    - cmake -S . -B build
+    - cmake --build build
+    - ctest --test-dir build
+
