@@ -15,11 +15,12 @@ env:
 jobs:
   main:
     runs-on: ubuntu-24.04
+    container:
+      image: docker.io/sindiesel/cpp_ubuntu:22.0.20
+      volumes:
+        - ./examples/arithmetic_progression:/app
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: sudo apt install -y libgtest-dev
 
       - name: Configure project
         working-directory: ${{ env.WORKDIR }}
