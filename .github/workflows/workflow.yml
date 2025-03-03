@@ -15,11 +15,10 @@ env:
 jobs:
   main:
     runs-on: ubuntu-24.04
+    container:
+      image: sindiesel/ubuntu_24.04_test:1.1
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: sudo apt install -y libgtest-dev
 
       - name: Configure project
         working-directory: ${{ env.WORKDIR }}
