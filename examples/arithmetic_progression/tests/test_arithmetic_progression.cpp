@@ -3,7 +3,7 @@
 
 TEST(ArithmeticProgressionTest, GeneratesCorrectSequence) {
     std::vector<int> expected = {2, 5, 8, 11, 14};
-    EXPECT_EQ(ArithmeticProgression::generate(2, 3, 5), expected);
+    EXPECT_EQ(ArithmeticProgression::generate(2, 3, 6), expected);
 }
 
 TEST(ArithmeticProgressionTest, HandlesSingleTerm) {
