@@ -15,22 +15,11 @@ env:
 jobs:
   main:
     runs-on: ubuntu-24.04
+    container:
+      image: sindiesel/ubuntu_24.04_test:1.1
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: sudo apt install -y libgtest-dev
-
-      - name: Configure project
+      - name: Full run
         working-directory: ${{ env.WORKDIR }}
-        run: |
-          mkdir build
-          cmake -S . -B build
-
-      - name: Build project
-        working-directory: ${{ env.WORKDIR }}
-        run: cmake --build build
-
-      - name: Test project
-        working-directory: ${{ env.WORKDIR }}
-        run: ctest --test-dir build
+        run: ./build.sh
