@@ -4,8 +4,8 @@ This project provides a simple C++ implementation for generating arithmetic prog
 
 ## Build Instructions
 ```sh
-mkdir build && cd build
-cmake ..
-make
+mkdir build
+cmake -B build
+cmake --build build
 ctest
 ```
