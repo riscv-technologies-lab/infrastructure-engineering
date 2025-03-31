@@ -1,0 +1,6 @@
+[project]
+dependencies = [
+    "conan==2.8.1"
+]
+requires-python = "==3.12"
+
