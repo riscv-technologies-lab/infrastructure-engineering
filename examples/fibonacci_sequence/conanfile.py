@@ -3,8 +3,8 @@ from conan.tools.cmake import cmake_layout
 from conan.tools.files import copy
 
 
-class ExampleRecipe(ConanFile):
-    name = "ap-bundle"
+class FibonacciSequenceConanfile(ConanFile):
+    name = "fbs"
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
     revision_mode = "scm"
@@ -12,22 +12,16 @@ class ExampleRecipe(ConanFile):
     exports_sources = "include*", "src*", "CMakeLists.txt*", "*.cpp"
 
     def requirements(self):
-        self.requires("gtest/[>=1.12.1 <=1.14.0]")
-        self.build_requires("cmake/3.30.5")
+        self.requires("gtest/[>=1.10.0, <=1.15.0]")
+        self.requires("ap-bundle/5.0")
 
     def layout(self):
         cmake_layout(self)
 
     def set_version(self):
-        self.version = "6.0"
+        self.version = "1.0"
 
     def build(self):
         self.run(f"cmake -S {self.source_folder} -B {self.build_folder}")
         self.run(f"cmake --build {self.build_folder}")
 
-    def package(self):
-        copy(self, "entrypoint", src=self.build_folder, dst=self.package_folder)
-        copy(self, "*.a", src=self.build_folder, dst=self.package_folder)
-
-    def package_info(self):
-        pass
