@@ -1,0 +1,351 @@
+
+<html lang="en">
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.9/standalone/umd/vis-network.min.js" integrity="sha512-iTgTmIgxyA2YehKNVbzLJx4j9SnuC5ihtRrtxVkXH/9nF3vXBN5YeNQp+6wufBWKD3u+roHVNOvWBMufQnBbug==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </head>
+
+    <body>
+        <style>
+            @media print {
+                .noPrint {
+                    display: none;
+                }
+            }
+            .button {
+                background-color: #5555cc;
+                border: none;
+                color: white;
+                padding: 5px 10px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 18px;
+            }
+        </style>
+
+        <div style="display: grid; grid-template-columns: 75% 25%; grid-template-rows: 30px auto; height: 100vh;">
+            <div id="mylegend" style="background-color: lightgrey; grid-column-end: span 2;"></div>
+            <div id="mynetwork"></div>
+            <div style="background-color: lightgrey;min-height:100%;height:0;overflow-y: auto;">
+                <div>
+                    <input type="checkbox" onchange="switchBuild()" id="show_build_requires" checked />
+                    <label for="show_build_requires">Show build-requires</label>
+                </div>
+                <div>
+                    <input type="checkbox" onchange="switchTest()" id="show_test_requires" checked />
+                    <label for="show_test_requires">Show test-requires</label>
+                </div>
+                <div>
+                    <input type="checkbox" onchange="collapsePackages()" id="collapse_packages"/>
+                    <label for="collapse_packages">Group packages</label>
+                </div>
+                 <div>
+                    <input type="checkbox" onchange="showPackageType()" id="show_package_type"/>
+                    <label for="show_package_type">Show package type</label>
+                </div>
+                 <div>
+                    <input type="search" placeholder="Search packages..." oninput="searchPackages(this)">
+                </div>
+                 <div>
+                    <input type="search" placeholder="Exclude packages..." title="Add a comma to exclude an additional package" oninput="excludePackages(this)">
+                </div>
+                <div>
+                    <input type="checkbox" onchange="showhideclass('controls')" id="show_controls"/>
+                    <label for="show_controls">Show graph controls</label>
+                </div>
+                <div id="controls" class="controls" style="padding:5; display:none"></div>
+                <div id="details"  style="padding:10;" class="noPrint">Package info: Click on one package to show information</div>
+                <div id="error" style="padding:10;" class="noPrint"></div>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            const graph_data = {"error": null, "nodes": {"0": {"author": null, "binary": null, "binary_remote": null, "build_folder": null, "build_id": null, "build_policy": null, "channel": null, "conf_info": {}, "context": "host", "cpp_info": {"root": {"bindirs": ["bin"], "builddirs": null, "cflags": null, "cxxflags": null, "defines": null, "exelinkflags": null, "frameworkdirs": null, "frameworks": null, "includedirs": ["include"], "libdirs": ["lib"], "libs": null, "objects": null, "properties": null, "requires": null, "resdirs": null, "sharedlinkflags": null, "srcdirs": null, "sysroot": null, "system_libs": null}}, "default_options": null, "dependencies": {"1": {"build": false, "direct": true, "force": false, "headers": true, "libs": true, "package_id_mode": "semver_mode", "ref": "ap-bundle/6.0", "run": false, "skip": false, "test": false, "transitive_headers": null, "transitive_libs": null, "visible": true}, "2": {"build": false, "direct": true, "force": false, "headers": true, "libs": true, "package_id_mode": "semver_mode", "ref": "gtest/1.14.0", "run": false, "skip": false, "test": false, "transitive_headers": null, "transitive_libs": null, "visible": true}}, "deprecated": null, "description": null, "generators": ["CMakeDeps", "CMakeToolchain"], "generators_folder": null, "homepage": null, "id": "0", "immutable_package_folder": null, "info": {"requires": ["ap-bundle/6.Y.Z", "gtest/1.Y.Z"], "settings": {"arch": "x86_64", "build_type": "Release", "compiler": "gcc", "compiler.cppstd": "17", "compiler.libcxx": "libstdc++11", "compiler.version": "11", "os": "Linux"}}, "info_invalid": null, "invalid_build": false, "label": "conanfile.py (fbs/1.0)", "languages": [], "license": null, "name": "fbs", "options": {}, "options_definitions": {}, "options_description": null, "package_folder": null, "package_id": "6e29081390b7da23867b63cd338cdc63b9e42ea1", "package_type": "unknown", "prev": null, "prev_timestamp": null, "provides": null, "python_requires": null, "recipe": "Consumer", "recipe_folder": "/home/stanislav/mipt/riscv-technologies-lab/infrastructure-engineering-course/examples/fibonacci_sequence", "ref": "fbs/1.0", "remote": null, "revision_mode": "scm", "rrev": null, "rrev_timestamp": null, "settings": {"arch": "x86_64", "build_type": "Release", "compiler": "gcc", "compiler.cppstd": "17", "compiler.libcxx": "libstdc++11", "compiler.version": "11", "os": "Linux"}, "source_folder": null, "system_requires": {}, "test": false, "topics": null, "upload_policy": null, "url": null, "user": null, "vendor": false, "version": "1.0", "win_bash": null, "win_bash_run": null}, "1": {"author": null, "binary": "Cache", "binary_remote": null, "build_folder": null, "build_id": null, "build_policy": null, "channel": null, "conf_info": {}, "context": "host", "cpp_info": {"root": {"bindirs": ["bin"], "builddirs": null, "cflags": null, "cxxflags": null, "defines": null, "exelinkflags": null, "frameworkdirs": null, "frameworks": null, "includedirs": ["include"], "libdirs": ["lib"], "libs": null, "objects": null, "properties": null, "requires": null, "resdirs": null, "sharedlinkflags": null, "srcdirs": null, "sysroot": null, "system_libs": null}}, "default_options": null, "dependencies": {"2": {"build": false, "direct": true, "force": false, "headers": true, "libs": true, "package_id_mode": "semver_mode", "ref": "gtest/1.14.0", "run": false, "skip": false, "test": false, "transitive_headers": null, "transitive_libs": null, "visible": true}, "3": {"build": true, "direct": true, "force": false, "headers": false, "libs": false, "package_id_mode": null, "ref": "cmake/3.30.5", "run": true, "skip": false, "test": false, "transitive_headers": null, "transitive_libs": null, "visible": false}}, "deprecated": null, "description": null, "generators": ["CMakeDeps", "CMakeToolchain"], "generators_folder": null, "homepage": null, "id": "1", "immutable_package_folder": null, "info": {"requires": ["gtest/1.Y.Z"], "settings": {"arch": "x86_64", "build_type": "Release", "compiler": "gcc", "compiler.cppstd": "17", "compiler.libcxx": "libstdc++11", "compiler.version": "11", "os": "Linux"}}, "info_invalid": null, "invalid_build": false, "label": "ap-bundle/6.0", "languages": [], "license": null, "name": "ap-bundle", "options": {}, "options_definitions": {}, "options_description": null, "package_folder": null, "package_id": "adbdb86cc0cab6af5e4c3168e90fdabaf1e676dc", "package_type": "unknown", "prev": "5d4e2e2beed1d89790af0648173a9f72", "prev_timestamp": 1744483330.498458, "provides": null, "python_requires": null, "recipe": "Cache", "recipe_folder": "/home/stanislav/.conan2/p/ap-buaee4c9e141667/e", "ref": "ap-bundle/6.0#55625642b05009037133829a4b37af1d27c3e37b", "remote": null, "revision_mode": "scm", "rrev": "55625642b05009037133829a4b37af1d27c3e37b", "rrev_timestamp": 1744483326.270351, "settings": {"arch": "x86_64", "build_type": "Release", "compiler": "gcc", "compiler.cppstd": "17", "compiler.libcxx": "libstdc++11", "compiler.version": "11", "os": "Linux"}, "source_folder": null, "system_requires": {}, "test": false, "topics": null, "upload_policy": null, "url": null, "user": null, "vendor": false, "version": "6.0", "win_bash": null, "win_bash_run": null}, "2": {"author": null, "binary": "Cache", "binary_remote": null, "build_folder": null, "build_id": null, "build_policy": null, "channel": null, "conf_info": {}, "context": "host", "cpp_info": {"root": {"bindirs": ["bin"], "builddirs": null, "cflags": null, "cxxflags": null, "defines": null, "exelinkflags": null, "frameworkdirs": null, "frameworks": null, "includedirs": ["include"], "libdirs": ["lib"], "libs": null, "objects": null, "properties": null, "requires": null, "resdirs": null, "sharedlinkflags": null, "srcdirs": null, "sysroot": null, "system_libs": null}}, "default_options": {"build_gmock": true, "debug_postfix": "d", "disable_pthreads": false, "fPIC": true, "hide_symbols": false, "no_main": false, "shared": false}, "dependencies": {}, "deprecated": null, "description": "Google\u0027s C++ test framework", "generators": [], "generators_folder": null, "homepage": "https://github.com/google/googletest", "id": "2", "immutable_package_folder": null, "info": {"options": {"build_gmock": "True", "disable_pthreads": "False", "fPIC": "True", "hide_symbols": "False", "shared": "False"}, "settings": {"arch": "x86_64", "build_type": "Release", "compiler": "gcc", "compiler.cppstd": "17", "compiler.libcxx": "libstdc++11", "compiler.version": "11", "os": "Linux"}}, "info_invalid": null, "invalid_build": false, "label": "gtest/1.14.0", "languages": [], "license": "BSD-3-Clause", "name": "gtest", "options": {"build_gmock": "True", "disable_pthreads": "False", "fPIC": "True", "hide_symbols": "False", "no_main": "False", "shared": "False"}, "options_definitions": {"build_gmock": ["True", "False"], "disable_pthreads": ["True", "False"], "fPIC": ["True", "False"], "hide_symbols": ["True", "False"], "no_main": ["True", "False"], "shared": ["True", "False"]}, "options_description": null, "package_folder": null, "package_id": "2ccd6652789906cdc03dfd327ec8c127706c87fa", "package_type": "static-library", "prev": "e3e2a2e3d2edaf99051f05b0cd87d15d", "prev_timestamp": 1715096378.642, "provides": null, "python_requires": null, "recipe": "Cache", "recipe_folder": "/home/stanislav/.conan2/p/gtest4ca9d6e5f6c08/e", "ref": "gtest/1.14.0#25e2a474b4d1aecf5ff4f0555dcdf72c", "remote": null, "revision_mode": "hash", "rrev": "25e2a474b4d1aecf5ff4f0555dcdf72c", "rrev_timestamp": 1715096213.863, "settings": {"arch": "x86_64", "build_type": "Release", "compiler": "gcc", "compiler.cppstd": "17", "compiler.libcxx": "libstdc++11", "compiler.version": "11", "os": "Linux"}, "source_folder": null, "system_requires": {}, "test": false, "topics": ["testing", "google-testing", "unit-test"], "upload_policy": null, "url": "https://github.com/conan-io/conan-center-index", "user": null, "vendor": false, "version": "1.14.0", "win_bash": null, "win_bash_run": null}, "3": {"author": null, "binary": "Skip", "binary_remote": null, "build_folder": null, "build_id": null, "build_policy": null, "channel": null, "conf_info": {}, "context": "build", "cpp_info": {"root": {"bindirs": ["bin"], "builddirs": null, "cflags": null, "cxxflags": null, "defines": null, "exelinkflags": null, "frameworkdirs": null, "frameworks": null, "includedirs": ["include"], "libdirs": ["lib"], "libs": null, "objects": null, "properties": null, "requires": null, "resdirs": null, "sharedlinkflags": null, "srcdirs": null, "sysroot": null, "system_libs": null}}, "default_options": null, "dependencies": {}, "deprecated": null, "description": "CMake, the cross-platform, open-source build system.", "generators": [], "generators_folder": null, "homepage": "https://github.com/Kitware/CMake", "id": "3", "immutable_package_folder": null, "info": {"settings": {"arch": "x86_64", "os": "Linux"}}, "info_invalid": null, "invalid_build": false, "label": "cmake/3.30.5", "languages": [], "license": "BSD-3-Clause", "name": "cmake", "options": {}, "options_definitions": {}, "options_description": null, "package_folder": null, "package_id": "63fead0844576fc02943e16909f08fcdddd6f44b", "package_type": "application", "prev": "e7bca794d221e787672baaed17ddbc3f", "prev_timestamp": 1728562691.511, "provides": null, "python_requires": null, "recipe": "Cache", "recipe_folder": "/home/stanislav/.conan2/p/cmake943f776efed97/e", "ref": "cmake/3.30.5#540068cc37f1d21b42b729c82d6bcb29", "remote": null, "revision_mode": "hash", "rrev": "540068cc37f1d21b42b729c82d6bcb29", "rrev_timestamp": 1728562547.207, "settings": {"arch": "x86_64", "os": "Linux"}, "source_folder": null, "system_requires": {}, "test": false, "topics": ["build", "installer"], "upload_policy": null, "url": "https://github.com/conan-io/conan-center-index", "user": null, "vendor": false, "version": "3.30.5", "win_bash": null, "win_bash_run": null}}, "overrides": {}, "replaced_requires": {}, "resolved_ranges": {}, "root": {"0": "fbs/1.0"}};
+            let hide_build = false;
+            let hide_test = false;
+            let search_pkgs = null;
+            let excluded_pkgs = null;
+            let collapse_packages = false;
+            let show_package_type = false;
+            let color_map = {Cache: "SkyBlue",
+                             Download: "LightGreen",
+                             Build: "Yellow",
+                             Missing: "Orange",
+                             Update: "SeaGreen",
+                             Skip: "White",
+                             Editable: "LightCyan",
+                             EditableBuild: "Cyan",
+                             Invalid: "Red",
+                             Platform: "Violet"};
+            let global_edges = {};
+            function define_data(){
+                let nodes = [];
+                let edges = [];
+                let collapsed_packages = {};
+                let targets = {};
+                global_edges = {};
+                let edge_counter = 0;
+                let conflict=null;
+                if (graph_data["error"] && graph_data["error"]["type"] == "conflict")
+                    conflict = graph_data["error"];
+                for (const [node_id, node] of Object.entries(graph_data["nodes"])) {
+                    if (node.context == "build" && hide_build) continue;
+                    if (node.test && hide_test) continue;
+                    let shape = node.context == "build" || node.test ? "ellipse" : "box";
+                    let label = null;
+                    if (node["name"])
+                        label =  node["name"] + "/" + node["version"];
+                    else if (node["ref"])
+                        label = node["ref"];
+                    else
+                        label = node.recipe == "Consumer"? "conanfile": "CLI";
+                    if (collapse_packages) {
+                        let existing = collapsed_packages[label];
+                        targets[node_id] = existing;
+                        if (existing) continue;
+                        collapsed_packages[label] = node_id;
+                    }
+                    if (excluded_pkgs) {
+                        let patterns = excluded_pkgs.split(',')
+                            .map(pattern => pattern.trim())
+                            .filter(pattern => pattern.length > 0)
+                            .map(pattern => pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+                        if (patterns.some(pattern => label.match(pattern))) {
+                            continue;
+                        }
+                    }
+                    if (show_package_type) {
+                         label = "<b>" + label + "\n" + "<i>" + node.package_type + "</i>";
+                    }
+                    borderWidth = 1;
+                    borderColor = "SkyBlue";
+                    font = {multi: 'html'};
+                    shapeProperties = {};
+                    let color = color_map[node.binary]
+                    if (conflict && conflict.branch1.dst_id == node_id){
+                        font.color = "white";
+                        color = "Black";
+                        shape = "circle";
+                    }
+                    if (search_pkgs) {
+                        let patterns = search_pkgs.split(',')
+                            .map(pattern => pattern.trim())
+                            .filter(pattern => pattern.length > 0)
+                            .map(pattern => pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+                        if (patterns.some(pattern => label.match(pattern))) {
+                            borderWidth = 3;
+                            borderColor = "Magenta";
+                        }
+                    }
+                    if (node.test) {
+                        font.background = "lightgrey";
+                        shapeProperties = {borderDashes: true};
+                    }
+                    if (node.recipe == "Platform") {
+                        font.background = "Violet";
+                    }
+                    if (node.vendor) {
+                        borderColor = "Red";
+                        shapeProperties = {borderDashes: [3,5]};
+                        borderWidth = 2;
+                    }
+                    nodes.push({
+                        id: node_id,
+                        font: font,
+                        label: label,
+                        shape: shape,
+                        shapeProperties: shapeProperties,
+                        borderWidth: borderWidth,
+                        color: {border: borderColor, background: color,
+                                highlight: {background: color, border: "Blue"}},
+                    });
+                }
+                for (const [node_id, node] of Object.entries(graph_data["nodes"])) {
+                    for (const [dep_id, dep] of Object.entries(node["dependencies"])) {
+                        if (dep.direct){
+                            let target_id = targets[dep_id] || dep_id;
+                            edges.push({id: edge_counter, from: node_id, to: target_id,
+                                        color: {color: "SkyBlue", highlight: "Blue"}});
+                            global_edges[edge_counter++] = dep;
+                        }
+                    }
+                }
+                if (conflict) {
+                    let conflict_id = null;
+                    if (conflict.branch1.dst_id) { // already created conflict node
+                        conflict_id = conflict.branch1.dst_id;
+                    }
+                    else {
+                        conflict_id = "conflict_id";
+                        nodes.push({
+                            id: conflict_id,
+                            font: {color: "white"},
+                            label: conflict.name,
+                            shape: "circle",
+                            color: {background: "black",
+                                    highlight: {background: "black", border: "Blue"}},
+                        });
+                        edges.push({id: edge_counter, from: conflict.branch1.src_id, to: conflict_id,
+                                    color: {color: "Red", highlight: "Red"},
+                                    label: conflict.branch1.require.ref});
+                        global_edges[edge_counter++] = conflict.branch1.require;
+                    }
+                    edges.push({id: edge_counter, from: conflict.branch2.src_id, to: conflict_id,
+                                color: {color: "Red", highlight: "Red"},
+                                label: conflict.branch2.require.ref});
+                    global_edges[edge_counter++] = conflict.branch2.require;
+                }
+                return {nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges)};
+            };
+            function define_legend() {
+                let x = 0;
+                let y = 0;
+                let step = 250;
+                let legend_nodes = [];
+                legend_nodes.push({id: 0, x: x, y: y, shape: "box", font: {size: 35},
+                    label: "require",
+                });
+                legend_nodes.push({id: 1, x: x + step, y: y, font: {size: 35}, shape: "ellipse",
+                    label: "tool-require",
+                });
+                legend_nodes.push({id: 2, x: x + 2* step, y: y, font: {size: 35, background: "lightgrey"},
+                    shape: "ellipse", shapeProperties: {borderDashes: true},
+                    label: "test-require",
+                })
+                let counter = 3;
+                legend_nodes.push({x: x + counter*step, y: y, shape: "ellipse",
+                    label: "platform",
+                    font: {size: 35, background: "Violet"},
+                });
+                counter++;
+                for (const [status, color] of Object.entries(color_map)) {
+                    legend_nodes.push({x: x + counter*step, y: y, shape: "box", font: {size: 35},
+                        label: status,
+                        color: {border: "SkyBlue", background: color}
+                    });
+                    counter++;
+                }
+                legend_nodes.push({x: x + counter*step, y: y, shape: "box",
+                    label: "conflict",
+                    font: {size: 35, color: "white"},
+                    color: {border: "SkyBlue", background: "Black"}
+                });
+                counter++;
+
+                legend_nodes.push({x: x + counter*step, y: y, shape: "box",
+                    label: "vendor", font: {size: 35},
+                    color: {border: "Red"},
+                    shapeProperties: {borderDashes: [3,5]},
+                    borderWidth: 2
+                });
+                return {nodes: new vis.DataSet(legend_nodes)};
+            }
+            let error = document.getElementById("error");
+            if (graph_data["error"]){
+                 let div = document.createElement('div');
+                 div.innerHTML = "<pre>Error in the graph: " + JSON.stringify(graph_data["error"], undefined, 2) + "</pre>";
+                 error.appendChild(div);
+            }
+            let container = document.getElementById('mynetwork');
+            let controls = document.getElementById('controls');
+            let legend_container = document.getElementById('mylegend');
+
+            let options = {
+                autoResize: true,
+                locale: 'en',
+                edges: {
+                    arrows: { to: {enabled: true} },
+                    smooth: { enabled: false}
+                },
+                nodes: {font: {'face': 'monospace', 'align': 'left'}},
+                layout: {
+                    "hierarchical": {
+                        enabled: true,
+                        sortMethod: "directed",
+                        direction: "DU",
+                        nodeSpacing: 170,
+                        blockShifting: true,
+                        edgeMinimization: true,
+                        shakeTowards: "roots",
+                    }
+                },
+                physics: { enabled: false},
+                configure: {
+                    enabled: true,
+                    filter: 'layout physics',
+                    showButton: false,
+                    container: controls
+                }
+            };
+
+            let data = define_data();
+            let network = new vis.Network(container, data, options);
+            let legend_data = define_legend();
+            let options_legend = {interaction: {selectable: false, dragView: false, dragNodes: false,
+                                                zoomView: false}, physics: {enabled: false}};
+            let legend = new vis.Network(legend_container, legend_data, options_legend);
+
+            network.on('click', function (properties) {
+                let ids = properties.nodes;
+                let ids_edges = properties.edges;
+                let control = document.getElementById("details");
+                while (control.firstChild) {
+                    control.removeChild(control.firstChild);
+                }
+                if(ids[0] || ids_edges[0]) {
+                    selected = graph_data["nodes"][ids[0]] || global_edges[ids_edges[0]];
+                    let div = document.createElement('div');
+                    let f = Object.fromEntries(Object.entries(selected).filter(([_, v]) => v != null));
+                    div.innerText = JSON.stringify(f, undefined, 2);
+                    let div2 = document.createElement('div');
+                    div2.innerHTML = "<pre>" + div.innerHTML + "</pre>";
+                    control.appendChild(div2);
+                }
+                else {
+                    control.innerHTML = "<b>Info</b>: Click on a package or edge for more info";
+                }
+            });
+            function draw() {
+                let scale = network.getScale();
+                let viewPos = network.getViewPosition();
+                data = define_data();
+                network.setData(data);
+                network.redraw();
+                network.moveTo({position: viewPos, scale: scale});
+            }
+            function switchBuild() {
+                hide_build = !hide_build;
+                draw();
+            }
+            function switchTest() {
+                hide_test = !hide_test;
+                draw();
+            }
+            function collapsePackages() {
+                collapse_packages = !collapse_packages;
+                draw();
+            }
+            function searchPackages(e) {
+                search_pkgs = e.value;
+                draw();
+            }
+            function excludePackages(e) {
+                excluded_pkgs = e.value;
+                draw();
+            }
+            function showPackageType(e) {
+                show_package_type = !show_package_type;
+                draw();
+            }
+            function showhideclass(id) {
+                let elements = document.getElementsByClassName(id)
+                for (let i = 0; i < elements.length; i++) {
+                    elements[i].style.display = (elements[i].style.display != 'none') ? 'none' : 'block';
+                }
+            }
+            window.addEventListener("load", () => {
+               draw();
+            });
+        </script>
+    </body>
+</html>

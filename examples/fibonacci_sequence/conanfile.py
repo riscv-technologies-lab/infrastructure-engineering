@@ -12,8 +12,8 @@ class FibonacciSequenceConanfile(ConanFile):
     exports_sources = "include*", "src*", "CMakeLists.txt*", "*.cpp"
 
     def requirements(self):
-        self.requires("gtest/[>=1.10.0, <=1.15.0]")
-        self.requires("ap-bundle/5.0")
+        self.requires("ap-bundle/6.0")
+        self.requires("gtest/[>=1.11.0 <=1.15.0]")
 
     def layout(self):
         cmake_layout(self)
